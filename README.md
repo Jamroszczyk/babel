@@ -231,6 +231,22 @@ MIT License - feel free to use this project for personal or commercial purposes.
 
 See [LICENSE](LICENSE) for full details.
 
+## ⚠️ Service Dependencies
+
+This project uses Azure SDKs to interact with:
+
+-**Azure OpenAI** for language model services
+
+-**Azure Speech Services** for text-to-speech synthesis
+
+While the SDKs are open-source (MIT licensed), **access to Azure services requires**:
+
+- Active Azure subscription
+- Compliance with Microsoft's Terms of Service
+- Appropriate API keys and endpoints
+
+Users are responsible for their own Azure usage costs and compliance.
+
 ## 🙏 Acknowledgments
 
 - **Azure Cognitive Services** for premium neural voices
@@ -241,6 +257,8 @@ See [LICENSE](LICENSE) for full details.
 **Privacy**: [Privacy Policy](https://www.tebbl.com/privacy-policy)
 
 **Legal**: [Imprint](https://www.tebbl.com/imprint)
+
+
 
 ---
 
