@@ -34,7 +34,11 @@ atexit.register(cleanup_azure_connection)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],  # FastAPI server
+    allow_origins=[
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",  # Local development
+        "https://babel-a9is.onrender.com",  # Production deployment
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
