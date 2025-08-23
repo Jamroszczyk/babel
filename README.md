@@ -95,7 +95,7 @@ SPEECHENDPOINT=https://your-region.api.cognitive.microsoft.com
 ### 3. Launch Application
 
 ```bash
-python backend_app.py
+python app.py
 ```
 
 Visit **http://localhost:8000** and start your first AI dialogue! 🎉
@@ -112,7 +112,7 @@ Visit **http://localhost:8000** and start your first AI dialogue! 🎉
 
 ```
 AI-Dialogue/
-├── backend_app.py          # FastAPI web server & WebSocket handler
+├── app.py                  # FastAPI web server & WebSocket handler
 ├── azure_tts_helper.py     # Azure Speech Services integration
 ├── transformers.py         # Azure OpenAI API calls
 ├── index.html             # Main frontend interface
