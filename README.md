@@ -12,30 +12,35 @@ AI Dialogue is a sophisticated conversation simulator where you configure two AI
 ## ✨ Features
 
 ### 🎙️ **Premium Neural Voices**
+
 - **28+ Azure Neural Voices** including Brian, Ava, Emma, Ryan and more
 - **Multilingual support** with natural-sounding speech
 - **Real-time audio streaming** with minimal latency
 - **Speed control** from 0.5x to 1.5x playback speed
 
 ### 🎨 **Modern Interface**
+
 - **Circular audio waveforms** that dance to the actual audio signal
 - **Clean, responsive design** that works on desktop and mobile
 - **Real-time character counting** with live validation
 - **Collapsible advanced settings** for power users
 
 ### 🧠 **Advanced AI Configuration**
+
 - **Human-like conversation instructions** built-in automatically
 - **Temperature and Top-P controls** for fine-tuning AI behavior
 - **Response length options**: Short (35 words), Medium (60 words), Long (90 words)
 - **Character limits**: Up to 375 characters per entity prompt
 
 ### 🚀 **Smart Conversation Management**
+
 - **Sample conversation templates**: Riddle challenges, political debates, joke rating
 - **Automatic conversation limits**: Max 20 interactions (10 per entity)
 - **Real-time WebSocket updates** for smooth interaction
 - **Comprehensive cleanup** between conversations prevents overlaps
 
 ### 🔒 **Privacy & Compliance**
+
 - **GDPR compliant** with proper legal links
 - **Azure EU data residency** for European users
 - **No data training** on your conversations
@@ -60,6 +65,7 @@ AI Dialogue is a sophisticated conversation simulator where you configure two AI
 ## 🚀 Quick Start
 
 ### 1. Clone & Setup
+
 ```bash
 git clone https://github.com/Jamroszczyk/AI-Dialogue.git
 cd AI-Dialogue
@@ -73,7 +79,9 @@ pip install -r requirements.txt
 ```
 
 ### 2. Configure Environment
+
 Create `.env` file in the project root:
+
 ```bash
 # Azure OpenAI (required)
 AZURE_OPENAI_KEY_DE_4_1=your_openai_api_key_here
@@ -85,6 +93,7 @@ SPEECHENDPOINT=https://your-region.api.cognitive.microsoft.com
 ```
 
 ### 3. Launch Application
+
 ```bash
 python backend_app.py
 ```
@@ -94,13 +103,9 @@ Visit **http://localhost:8000** and start your first AI dialogue! 🎉
 ## 🎯 How to Use
 
 1. **Configure AI Entities**: Enter simple prompts like "You love discussing space exploration" or "You're skeptical about new technology"
-
 2. **Choose Voices**: Select from 28+ premium Azure neural voices (Brian and Ava are defaults)
-
 3. **Pick a Template** (Optional): Try pre-built scenarios like riddle challenges or political debates
-
 4. **Fine-tune Settings**: Adjust temperature, top-p, response length, and speech speed
-
 5. **Start Conversation**: Hit the play button and watch your AIs come to life!
 
 ## 📁 Project Structure
@@ -123,48 +128,50 @@ AI-Dialogue/
 The app includes three built-in conversation templates:
 
 - **🧩 Riddle Challenge**: AIs take turns creating and solving riddles
-- **🗳️ Political Debate**: Respectful discussion between conservative and progressive viewpoints  
+- **🗳️ Political Debate**: Respectful discussion between conservative and progressive viewpoints
 - **😂 Joke Rating Time**: One AI tells jokes while the other provides ratings and feedback
 
 ## ⚙️ Configuration Options
 
 ### Entity Settings
+
 - **System Prompt**: Up to 375 characters defining the AI's personality
 - **Voice Selection**: Choose from 28+ Azure neural voices
 - **Speed Control**: 0.5x to 1.5x playback speed
 
 ### Advanced AI Parameters
+
 - **Temperature**: 0.0-2.0 (creativity vs consistency)
 - **Top P**: 0.0-1.0 (response diversity)
 - **Response Length**: Short/Medium/Long word limits
 
 ### Conversation Limits
+
 - **Character Limit**: 375 characters per prompt (with live counter)
 - **Interaction Limit**: Maximum 20 exchanges per conversation
 - **Auto-cleanup**: Prevents conversation overlap issues
 
 ## 🔧 Dependencies
 
-```
 fastapi==0.116.1
 uvicorn==0.35.0
-websockets==15.0.1
 python-dotenv==1.1.1
 pydantic==2.11.7
 openai==1.99.9
-azure-cognitiveservices-speech
-```
+azure-cognitiveservices-speech==1.45.0
 
 See `requirements.txt` for the complete list with all pinned versions.
 
 ## 🌍 Azure Services Setup
 
 ### Azure OpenAI
+
 1. Create an Azure OpenAI resource in your preferred region
 2. Deploy a **GPT-4o mini** model
 3. Copy the endpoint and API key to your `.env` file
 
 ### Azure Speech Services
+
 1. Create a Speech Services resource
 2. Choose a region (preferably same as OpenAI for lowest latency)
 3. Copy the service key and endpoint to your `.env` file
@@ -183,9 +190,6 @@ All voices support multiple languages and natural prosody patterns.
 
 ## 🔒 Privacy & Security
 
-- **EU Data Residency**: All data processing happens within EU/EWR regions
-- **No Training**: Your conversations are never used to train AI models
-- **GDPR Compliant**: Full privacy policy available at [tebbl.com/privacy-policy](https://www.tebbl.com/privacy-policy)
 - **Secure Connections**: All API calls use encrypted connections
 - **Auto-cleanup**: Audio files are automatically deleted after playback
 
@@ -194,16 +198,19 @@ All voices support multiple languages and natural prosody patterns.
 ### Common Issues
 
 **"Connection Error"**
+
 - Check your Azure credentials in `.env`
 - Verify your Azure resources are deployed and active
 - Ensure you have sufficient quota/credits
 
 **"Audio Not Playing"**
+
 - Check browser audio permissions
 - Try refreshing the page to reset audio context
 - Verify Speech Services key and endpoint
 
 **"WebSocket Disconnected"**
+
 - Restart the backend server
 - Check for firewall/proxy issues
 - Clear browser cache and reload
@@ -214,37 +221,26 @@ All voices support multiple languages and natural prosody patterns.
 - Verify all environment variables are set correctly
 - Ensure Python dependencies are installed in the virtual environment
 
-## 🚧 Roadmap
-
-- [ ] Multi-language conversation support
-- [ ] Conversation export/sharing
-- [ ] Custom voice training integration
-- [ ] Advanced conversation analytics
-- [ ] Mobile app versions
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
 ## 📄 License
 
-MIT License - feel free to use this project for personal or commercial purposes. Just give credit where it's due! 
+MIT License - feel free to use this project for personal or commercial purposes. Just give credit where it's due!
 
 See [LICENSE](LICENSE) for full details.
 
 ## 🙏 Acknowledgments
 
 - **Azure Cognitive Services** for premium neural voices
-- **FastAPI** for the excellent async web framework  
+- **FastAPI** for the excellent async web framework
 - **Azure OpenAI** for powerful language models
 - **Web Audio API** for real-time audio visualization
 
-## 📞 Support
+**Privacy**: [Privacy Policy](https://www.tebbl.com/privacy-policy)
 
-- **Issues**: Use GitHub Issues for bug reports and feature requests
-- **Discussions**: Use GitHub Discussions for questions and community chat
-- **Privacy**: [Privacy Policy](https://www.tebbl.com/privacy-policy)
-- **Legal**: [Imprint](https://www.tebbl.com/imprint)
+**Legal**: [Imprint](https://www.tebbl.com/imprint)
 
 ---
 
