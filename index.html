@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Dialogue - Conversation Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <!-- Configuration Panel -->
+            <div class="config-panel">
+                <div class="config-section">
+                    <div class="entity-config">
+                        <div class="entity-card" data-entity="1">
+                            <!-- Entity Title -->
+                            <h3 class="entity-title">AI 1</h3>
+                            
+                            <!-- Circular Waveform Centerpiece -->
+                            <div class="waveform-container" id="waveform1">
+                                <canvas class="waveform-canvas entity-1" id="waveformCanvas1"></canvas>
+                            </div>
+                            
+                            <!-- Main Prompt Input -->
+                            <div class="form-group">
+                                <label for="system1">Persona Prompt:</label>
+                                <div class="textarea-container">
+                                    <textarea id="system1" maxlength="375" placeholder="e.g. 'You love discussing the benefits of renewable energy' or 'You're passionate about space exploration'"></textarea>
+                                    <div class="character-counter">
+                                        <span id="charCount1">0</span>/375
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Collapsible Advanced Settings -->
+                            <button class="settings-toggle" id="settingsToggle1" type="button">
+                                <i class="fas fa-cog"></i>
+                                Advanced Settings
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </button>
+                            
+                            <div class="settings-panel collapsed" id="settingsPanel1">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="voice1">Voice:</label>
+                                        <select id="voice1">
+                                            <option value="Brian" selected>Brian (Male)</option>
+                                            <option value="Ava">Ava (Female)</option>
+                                            <option value="Adam">Adam (Male)</option>
+                                            <option value="Alloy">Alloy (Male)</option>
+                                            <option value="Amanda">Amanda (Female)</option>
+                                            <option value="Andrew">Andrew (Male)</option>
+                                            <option value="Brandon">Brandon (Male)</option>
+                                            <option value="Christopher">Christopher (Male)</option>
+                                            <option value="Cora">Cora (Female)</option>
+                                            <option value="Davis">Davis (Male)</option>
+                                            <option value="Derek">Derek (Male)</option>
+                                            <option value="Dustin">Dustin (Male)</option>
+                                            <option value="Echo">Echo (Male)</option>
+                                            <option value="Emma">Emma (Female)</option>
+                                            <option value="Evelyn">Evelyn (Female)</option>
+                                            <option value="Fable">Fable (Neutral)</option>
+                                            <option value="Jenny">Jenny (Female)</option>
+                                            <option value="Lewis">Lewis (Male)</option>
+                                            <option value="Lola">Lola (Female)</option>
+                                            <option value="Nancy">Nancy (Female)</option>
+                                            <option value="Nova">Nova (Female)</option>
+                                            <option value="Onyx">Onyx (Male)</option>
+                                            <option value="Phoebe">Phoebe (Female)</option>
+                                            <option value="Ryan">Ryan (Male)</option>
+                                            <option value="Samuel">Samuel (Male)</option>
+                                            <option value="Serena">Serena (Female)</option>
+                                            <option value="Shimmer">Shimmer (Female)</option>
+                                            <option value="Steffan">Steffan (Male)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="speed1">Speed:</label>
+                                        <input type="range" id="speed1" min="0.5" max="1.5" step="0.1" value="1.0">
+                                        <span class="speed-value">1.0x</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="temperature1">Temperature:</label>
+                                        <input type="range" id="temperature1" min="0.1" max="2.0" step="0.1" value="0.7">
+                                        <span class="temp-value">0.7</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="responseLength1">Response Length:</label>
+                                                                            <select id="responseLength1">
+                                        <option value="short">Short (35 words)</option>
+                                        <option value="medium">Medium (60 words)</option>
+                                        <option value="long">Long (90 words)</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="topP1">Top P:</label>
+                                        <input type="range" id="topP1" min="0.1" max="1.0" step="0.05" value="1.0">
+                                        <span class="top-p-value">1.0</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="entity-card" data-entity="2">
+                            <!-- Entity Title -->
+                            <h3 class="entity-title">AI 2</h3>
+                            
+                            <!-- Circular Waveform Centerpiece -->
+                            <div class="waveform-container" id="waveform2">
+                                <canvas class="waveform-canvas entity-2" id="waveformCanvas2"></canvas>
+                            </div>
+                            
+                            <!-- Main Prompt Input -->
+                            <div class="form-group">
+                                <label for="system2">Persona Prompt:</label>
+                                <div class="textarea-container">
+                                    <textarea id="system2" maxlength="375" placeholder="e.g. 'You prefer traditional energy sources and are skeptical of green tech' or 'You think Mars colonization is unrealistic'"></textarea>
+                                    <div class="character-counter">
+                                        <span id="charCount2">0</span>/375
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Collapsible Advanced Settings -->
+                            <button class="settings-toggle" id="settingsToggle2" type="button">
+                                <i class="fas fa-cog"></i>
+                                Advanced Settings
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </button>
+                            
+                            <div class="settings-panel collapsed" id="settingsPanel2">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="voice2">Voice:</label>
+                                        <select id="voice2">
+                                            <option value="Ava" selected>Ava (Female)</option>
+                                            <option value="Brian">Brian (Male)</option>
+                                            <option value="Adam">Adam (Male)</option>
+                                            <option value="Alloy">Alloy (Male)</option>
+                                            <option value="Amanda">Amanda (Female)</option>
+                                            <option value="Andrew">Andrew (Male)</option>
+                                            <option value="Brandon">Brandon (Male)</option>
+                                            <option value="Christopher">Christopher (Male)</option>
+                                            <option value="Cora">Cora (Female)</option>
+                                            <option value="Davis">Davis (Male)</option>
+                                            <option value="Derek">Derek (Male)</option>
+                                            <option value="Dustin">Dustin (Male)</option>
+                                            <option value="Echo">Echo (Male)</option>
+                                            <option value="Emma">Emma (Female)</option>
+                                            <option value="Evelyn">Evelyn (Female)</option>
+                                            <option value="Fable">Fable (Neutral)</option>
+                                            <option value="Jenny">Jenny (Female)</option>
+                                            <option value="Lewis">Lewis (Male)</option>
+                                            <option value="Lola">Lola (Female)</option>
+                                            <option value="Nancy">Nancy (Female)</option>
+                                            <option value="Nova">Nova (Female)</option>
+                                            <option value="Onyx">Onyx (Male)</option>
+                                            <option value="Phoebe">Phoebe (Female)</option>
+                                            <option value="Ryan">Ryan (Male)</option>
+                                            <option value="Samuel">Samuel (Male)</option>
+                                            <option value="Serena">Serena (Female)</option>
+                                            <option value="Shimmer">Shimmer (Female)</option>
+                                            <option value="Steffan">Steffan (Male)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="speed2">Speed:</label>
+                                        <input type="range" id="speed2" min="0.5" max="1.5" step="0.1" value="1.0">
+                                        <span class="speed-value">1.0x</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="temperature2">Temperature:</label>
+                                        <input type="range" id="temperature2" min="0.1" max="2.0" step="0.1" value="0.7">
+                                        <span class="temp-value">0.7</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="responseLength2">Response Length:</label>
+                                                                            <select id="responseLength2">
+                                        <option value="short">Short (35 words)</option>
+                                        <option value="medium">Medium (60 words)</option>
+                                        <option value="long">Long (90 words)</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="topP2">Top P:</label>
+                                        <input type="range" id="topP2" min="0.1" max="1.0" step="0.05" value="1.0">
+                                        <span class="top-p-value">1.0</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sample Conversations Dropdown -->
+                    <div class="sample-conversations">
+                        <label for="sampleConversations"><i class="fas fa-lightbulb"></i> Quick Start - Sample Conversations:</label>
+                        <select id="sampleConversations">
+                            <option value="">-- Select a sample conversation --</option>
+                            <option value="riddles">🧩 Riddle Challenge</option>
+                            <option value="political">🗳️ Political Debate</option>
+                            <option value="jokes">😂 Joke Rating Time</option>
+                        </select>
+                    </div>
+
+                    <div class="control-buttons">
+                        <button id="startBtn" class="btn btn-primary">
+                            <i class="fas fa-play"></i>
+                            Start Conversation
+                        </button>
+                        <button id="stopBtn" class="btn btn-secondary" disabled>
+                            <i class="fas fa-stop"></i>
+                            Stop Conversation
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversation Panel -->
+            <div class="conversation-panel">
+                <div class="conversation-header">
+                    <h2><i class="fas fa-messages"></i> Live Conversation</h2>
+                    <div class="status-indicator">
+                        <div class="status-dot" id="statusDot"></div>
+                        <span id="statusText">Disconnected</span>
+                    </div>
+                </div>
+
+                <div class="conversation-container" id="conversation">
+                    <div class="welcome-message">
+                        <div class="welcome-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Ready to Start</h3>
+                        <p>Configure your AI entities and click "Start Conversation" to begin the dialogue.</p>
+                    </div>
+                </div>
+
+                <!-- Audio Controls -->
+                <div class="audio-controls">
+                    <button id="muteBtn" class="btn btn-icon">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="volume-control">
+                        <input type="range" id="volumeSlider" min="0" max="100" value="100">
+                    </div>
+                    <span class="audio-status" id="audioStatus">Audio Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Generating response...</p>
+            </div>
+        </div>
+
+        <!-- Error Modal -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+                    <button class="modal-close" id="closeErrorModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">An error occurred while processing your request.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="acknowledgeError">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-content">
+            <a href="https://www.tebbl.com/privacy-policy" target="_blank" rel="noopener noreferrer">
+                Data Protection
+            </a>
+            <span class="footer-separator">|</span>
+            <a href="https://www.tebbl.com/imprint" target="_blank" rel="noopener noreferrer">
+                Imprint
+            </a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
