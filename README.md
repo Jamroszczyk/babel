@@ -103,7 +103,7 @@ Visit **http://localhost:8000** and start your first AI dialogue! 🎉
 ## 🎯 How to Use
 
 1. **Configure AI Entities**: Enter simple prompts like "You love discussing space exploration" or "You're skeptical about new technology"
-2. **Choose Voices**: Select from 28+ premium Azure neural voices (Brian and Ava are defaults)
+2. **Choose Voices**: Select from 28+ premium Azure neural voices (Christopher and Cora are defaults)
 3. **Pick a Template** (Optional): Try pre-built scenarios like riddle challenges or political debates
 4. **Fine-tune Settings**: Adjust temperature, top-p, response length, and speech speed
 5. **Start Conversation**: Hit the play button and watch your AIs come to life!

@@ -29,8 +29,8 @@ class AzureTTSHelper:
         # Voice mappings - maps display keys to Azure voice names
         self.voice_mappings = {
             # Default entities (swapped as requested)
-            "entity1": "en-US-BrianMultilingualNeural",  # AI 1 - Brian (male)
-            "entity2": "en-US-AvaMultilingualNeural",  # AI 2 - Ava (female)
+            "entity1": "en-US-ChristopherMultilingualNeural",  # AI 1 - Christopher (male)
+            "entity2": "en-US-CoraMultilingualNeural",  # AI 2 - Cora (female)
             # All available Azure voices
             "Adam": "en-US-AdamMultilingualNeural",
             "Alloy": "en-US-AlloyTurboMultilingualNeural",

@@ -63,8 +63,8 @@ conversation_tasks: Dict[str, asyncio.Task] = {}
 class ConversationRequest(BaseModel):
     system1: str
     system2: str
-    voice1: str = "Brian"  # Default to Brian for Entity 1
-    voice2: str = "Ava"  # Default to Ava for Entity 2
+    voice1: str = "Christopher"  # Default to Christopher for Entity 1
+    voice2: str = "Cora"  # Default to Cora for Entity 2
     speed1: float = 1.0
     speed2: float = 1.0
 
@@ -239,8 +239,8 @@ async def run_conversation(websocket: WebSocket, conversation_id: str, config: d
         )
         return
 
-    voice1 = config.get("voice1", "Brian")
-    voice2 = config.get("voice2", "Ava")
+    voice1 = config.get("voice1", "Christopher")
+    voice2 = config.get("voice2", "Cora")
     speed1 = config.get("speed1", 1.0)
     speed2 = config.get("speed2", 1.0)
 
