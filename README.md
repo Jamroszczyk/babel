@@ -1,4 +1,4 @@
-# 🤖 AI Dialogue
+# Banterfish
 
 **Two AI entities talking to each other — in real time, with premium neural voices**
 
@@ -257,8 +257,6 @@ Users are responsible for their own Azure usage costs and compliance.
 **Privacy**: [Privacy Policy](https://www.tebbl.com/privacy-policy)
 
 **Legal**: [Imprint](https://www.tebbl.com/imprint)
-
-
 
 ---
 
