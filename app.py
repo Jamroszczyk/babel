@@ -103,9 +103,21 @@ async def get_js():
 
 
 @app.get("/logo.svg")
-async def get_logo():
+async def get_logo_svg():
     """Serve the logo SVG file"""
     return FileResponse("static/logo.svg", media_type="image/svg+xml")
+
+
+@app.get("/logo.png")
+async def get_logo_png():
+    """Serve the logo PNG file"""
+    return FileResponse("static/logo.png", media_type="image/png")
+
+
+@app.get("/preview.png")
+async def get_preview():
+    """Serve the preview image for social media"""
+    return FileResponse("static/preview.png", media_type="image/png")
 
 
 async def cleanup_conversation_state(conversation_id: str):
