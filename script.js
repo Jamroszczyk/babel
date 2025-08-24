@@ -14,6 +14,11 @@ class AIDialogueApp {
         this.analyser2 = null;
         this.waveformAnimationId = null;
 
+        // Fade in/out system for smooth transitions
+        this.waveformOpacity1 = 0;
+        this.waveformOpacity2 = 0;
+        this.fadeSpeed = 0.05; // How fast to fade in/out
+
         this.initializeElements();
         this.attachEventListeners();
         this.updateSliderValues();
@@ -332,369 +337,207 @@ class AIDialogueApp {
             const height = canvas.height;
             const centerX = width / 2;
             const centerY = height / 2;
-            const maxRadius = Math.min(width, height) / 2 - 10; // Maximum boundary
-            const baseRadius = maxRadius * 0.6; // Base circle at 60% of max radius
-            const maxAmplitudeRange = maxRadius - baseRadius; // Available space for amplitude variations
-            const time = Date.now() * 0.001; // Time for animations
+            const radius = Math.min(width, height) / 2 - 10;
+            const time = Date.now() * 0.001;
 
+            // Update fade for smooth transitions
+            const targetOpacity = 1;
+            const currentOpacity =
+                entity === 1 ? this.waveformOpacity1 : this.waveformOpacity2;
+            const newOpacity = Math.min(
+                currentOpacity + this.fadeSpeed,
+                targetOpacity
+            );
+
+            if (entity === 1) {
+                this.waveformOpacity1 = newOpacity;
+            } else {
+                this.waveformOpacity2 = newOpacity;
+            }
+
+            // Clear canvas
             ctx.clearRect(0, 0, width, height);
 
-            // Calculate smooth waveform points covering entire circumference
-            const numPoints = 120; // High resolution for smooth curves
-            const waveformPoints = [];
-
-            // Use only the most active frequency range (typically lower frequencies)
-            // and distribute it across the entire circle for full coverage
-            const activeFreqRange = Math.min(bufferLength, 64); // Focus on lower frequencies where most content is
-            const maxAmplitude = Math.max(
-                ...dataArray.slice(0, activeFreqRange)
-            );
-
-            for (let i = 0; i < numPoints; i++) {
-                const angle = (i / numPoints) * Math.PI * 2;
-
-                // Smart frequency mapping: distribute active frequency content across full circle
-                // Map each point to multiple frequency bins and take the maximum
-                const freqSpread = 3; // Check multiple frequency bins per point
-                let maxFreqAmplitude = 0;
-
-                for (let spread = 0; spread < freqSpread; spread++) {
-                    // Use different mapping strategies for different parts of the circle
-                    let freqIndex;
-
-                    if (i < numPoints / 3) {
-                        // First third: Low frequencies (bass, fundamental tones)
-                        freqIndex =
-                            Math.floor(
-                                (i / (numPoints / 3)) * (activeFreqRange * 0.3)
-                            ) + spread;
-                    } else if (i < (numPoints * 2) / 3) {
-                        // Second third: Mid frequencies
-                        const midStart = activeFreqRange * 0.3;
-                        const localI = i - numPoints / 3;
-                        freqIndex =
-                            Math.floor(
-                                midStart +
-                                    (localI / (numPoints / 3)) *
-                                        (activeFreqRange * 0.4)
-                            ) + spread;
-                    } else {
-                        // Final third: Higher frequencies + mirror some low frequencies for fullness
-                        const highStart = activeFreqRange * 0.7;
-                        const localI = i - (numPoints * 2) / 3;
-                        freqIndex =
-                            Math.floor(
-                                highStart +
-                                    (localI / (numPoints / 3)) *
-                                        (activeFreqRange * 0.3)
-                            ) + spread;
-
-                        // Also add some mirrored low frequency content for visual richness
-                        const mirrorIndex = Math.floor(
-                            (localI / (numPoints / 3)) * (activeFreqRange * 0.3)
-                        );
-                        maxFreqAmplitude = Math.max(
-                            maxFreqAmplitude,
-                            dataArray[mirrorIndex] || 0
-                        );
-                    }
-
-                    freqIndex = Math.min(freqIndex, bufferLength - 1);
-                    maxFreqAmplitude = Math.max(
-                        maxFreqAmplitude,
-                        dataArray[freqIndex] || 0
-                    );
-                }
-
-                // Smooth interpolation for neighboring points
-                const prevPointIndex = (i - 1 + numPoints) % numPoints;
-                const nextPointIndex = (i + 1) % numPoints;
-
-                // Get amplitude for current and neighboring points for smoothing
-                const currentAmplitude = maxFreqAmplitude;
-
-                // Add harmonic relationships - frequencies that naturally occur together
-                const harmonicBoost = i % 2 === 0 ? 1.1 : 0.9; // Alternate points for natural rhythm
-                const resonanceEffect =
-                    Math.sin((i / numPoints) * Math.PI * 8) * 0.3 + 1; // Create resonance patterns
-
-                const smoothAmplitude =
-                    currentAmplitude * harmonicBoost * resonanceEffect;
-
-                // Enhanced amplitude calculation with multiple layers of effects
-                // Scale everything to fit within the available amplitude range
-                const audioAmplitude =
-                    (smoothAmplitude / 255) * maxAmplitudeRange * 0.4; // 40% for audio
-
-                // Add complementary wave effects that create fullness across the entire circle
-                // Scale each effect to use remaining space proportionally
-                const primaryWave =
-                    Math.sin(time * 2 + angle * 3) * maxAmplitudeRange * 0.15;
-                const secondaryWave =
-                    Math.sin(time * 3 + angle * 5) * maxAmplitudeRange * 0.08;
-                const tertiaryWave =
-                    Math.cos(time * 1.5 + angle * 2) * maxAmplitudeRange * 0.12;
-
-                // Breathing effect that varies across the circle
-                const breathingEffect =
-                    Math.sin(time * 1.5 + angle) * maxAmplitudeRange * 0.1;
-
-                // Create audio-reactive modulation
-                const audioReactiveEffect =
-                    (maxAmplitude / 255) *
-                    Math.sin(angle * 4 + time * 4) *
-                    maxAmplitudeRange *
-                    0.15;
-
-                // Combine all effects and ensure we never exceed bounds
-                const totalAmplitude =
-                    audioAmplitude +
-                    primaryWave +
-                    secondaryWave +
-                    tertiaryWave +
-                    breathingEffect +
-                    audioReactiveEffect;
-
-                // Clamp the final radius to always stay within bounds
-                const finalRadius = Math.min(
-                    baseRadius + totalAmplitude,
-                    maxRadius
-                );
-
-                waveformPoints.push({
-                    x: centerX + Math.cos(angle) * finalRadius,
-                    y: centerY + Math.sin(angle) * finalRadius,
-                    amplitude: smoothAmplitude,
-                });
-            }
-
-            // Create multiple visual layers for futuristic effect
-
-            // Layer 1: Outer glow ring
+            // Draw circular boundary (subtle outline)
             ctx.beginPath();
-            for (let i = 0; i < waveformPoints.length; i++) {
-                const point = waveformPoints[i];
-                if (i === 0) {
-                    ctx.moveTo(point.x, point.y);
-                } else {
-                    // Use quadratic curves for ultra-smooth lines
-                    const prevPoint = waveformPoints[i - 1];
-                    const cpx = (prevPoint.x + point.x) / 2;
-                    const cpy = (prevPoint.y + point.y) / 2;
-                    ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, cpx, cpy);
-                }
-            }
-            ctx.closePath();
-
-            // Futuristic gradient with multiple color stops
-            const outerGradient = ctx.createRadialGradient(
-                centerX,
-                centerY,
-                baseRadius * 0.2,
-                centerX,
-                centerY,
-                maxRadius
-            );
-
-            if (entity === 1) {
-                outerGradient.addColorStop(0, "rgba(102, 126, 234, 0.9)");
-                outerGradient.addColorStop(0.3, "rgba(138, 103, 255, 0.7)");
-                outerGradient.addColorStop(0.6, "rgba(118, 75, 162, 0.5)");
-                outerGradient.addColorStop(0.8, "rgba(102, 126, 234, 0.2)");
-                outerGradient.addColorStop(1, "rgba(102, 126, 234, 0.05)");
-            } else {
-                outerGradient.addColorStop(0, "rgba(240, 147, 251, 0.9)");
-                outerGradient.addColorStop(0.3, "rgba(255, 102, 196, 0.7)");
-                outerGradient.addColorStop(0.6, "rgba(245, 87, 108, 0.5)");
-                outerGradient.addColorStop(0.8, "rgba(240, 147, 251, 0.2)");
-                outerGradient.addColorStop(1, "rgba(240, 147, 251, 0.05)");
-            }
-
-            ctx.fillStyle = outerGradient;
-            ctx.fill();
-
-            // Layer 2: Main waveform with animated stroke
-            ctx.beginPath();
-            for (let i = 0; i < waveformPoints.length; i++) {
-                const point = waveformPoints[i];
-                if (i === 0) {
-                    ctx.moveTo(point.x, point.y);
-                } else {
-                    const prevPoint = waveformPoints[i - 1];
-                    const cpx = (prevPoint.x + point.x) / 2;
-                    const cpy = (prevPoint.y + point.y) / 2;
-                    ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, cpx, cpy);
-                }
-            }
-            ctx.closePath();
-
-            // Animated stroke with varying width
-            const strokeGradient = ctx.createLinearGradient(
-                0,
-                0,
-                width,
-                height
-            );
-            if (entity === 1) {
-                strokeGradient.addColorStop(0, "#667eea");
-                strokeGradient.addColorStop(0.5, "#8a67ff");
-                strokeGradient.addColorStop(1, "#764ba2");
-            } else {
-                strokeGradient.addColorStop(0, "#f093fb");
-                strokeGradient.addColorStop(0.5, "#ff66c4");
-                strokeGradient.addColorStop(1, "#f5576c");
-            }
-
-            ctx.strokeStyle = strokeGradient;
-            ctx.lineWidth = 3 + Math.sin(time * 2) * 1;
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = "#e5e7eb";
+            ctx.lineWidth = 1;
             ctx.stroke();
 
-            // Layer 3: Inner concentric rings for depth
-            for (let ring = 0; ring < 3; ring++) {
-                const ringRadius = baseRadius * (0.3 + ring * 0.2);
-                const ringOpacity = 0.6 - ring * 0.15;
-                const ringMaxVariation = (maxRadius - ringRadius) * 0.3; // Limit ring variations
+            // Calculate audio intensity for wave animation
+            const audioIntensity = Math.max(...dataArray.slice(0, 32)) / 255;
 
-                ctx.beginPath();
-                for (let i = 0; i < 60; i++) {
-                    const angle = (i / 60) * Math.PI * 2;
-                    const freqIndex = Math.floor((i / 60) * bufferLength);
-                    const amplitude = (dataArray[freqIndex] || 0) / 255;
+            // Entity colors
+            const entityColor = entity === 1 ? "#667EEA" : "#F093FB";
 
-                    const variation =
-                        amplitude * ringMaxVariation * (1 - ring * 0.3);
-                    const waveEffect =
-                        Math.sin(time * 2 + angle + ring) *
-                        ringMaxVariation *
-                        0.2;
+            // Create horizontal wave points across the circle
+            const wavePoints = [];
+            const numPoints = 200;
+            const waveAmplitude = 8 + audioIntensity * 12; // Reduced wave height
+            const baseWaveY = centerY; // Wave sits in middle of circle
 
-                    // Ensure ring stays within bounds
-                    const finalRadius = Math.min(
-                        ringRadius + variation + waveEffect,
-                        maxRadius * 0.9 // Keep rings within 90% of max radius
-                    );
+            // Calculate the width of the circle at different y positions
+            for (let i = 0; i <= numPoints; i++) {
+                const progress = i / numPoints;
+                const x = centerX - radius + progress * radius * 2;
 
-                    const x = centerX + Math.cos(angle) * finalRadius;
-                    const y = centerY + Math.sin(angle) * finalRadius;
+                // Create smooth ocean-like wave using multiple sine waves
+                const wave1 =
+                    Math.sin(progress * Math.PI * 4 + time * 2) *
+                    waveAmplitude *
+                    0.6;
+                const wave2 =
+                    Math.sin(progress * Math.PI * 6 + time * 1.5) *
+                    waveAmplitude *
+                    0.3;
+                const wave3 =
+                    Math.sin(progress * Math.PI * 8 + time * 2.5) *
+                    waveAmplitude *
+                    0.2;
 
-                    if (i === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
+                // Add audio-reactive ripples (reduced)
+                const audioWave =
+                    audioIntensity *
+                    Math.sin(progress * Math.PI * 10 + time * 4) *
+                    8;
+
+                const y = baseWaveY + wave1 + wave2 + wave3 + audioWave;
+
+                // Only include points that are within the circle bounds
+                const distFromCenter = Math.sqrt(
+                    Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)
+                );
+                if (distFromCenter <= radius) {
+                    wavePoints.push({ x, y });
                 }
+            }
+
+            // Create clipping mask for circle and apply fade opacity
+            ctx.save();
+            ctx.globalAlpha = newOpacity;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.clip();
+
+            // Fill bottom area (below wave) with entity color
+            if (wavePoints.length > 0) {
+                ctx.beginPath();
+
+                // Start from bottom-left of circle
+                ctx.moveTo(centerX - radius, centerY + radius);
+                ctx.lineTo(centerX + radius, centerY + radius); // Bottom edge
+
+                // Follow wave line from right to left
+                for (let i = wavePoints.length - 1; i >= 0; i--) {
+                    const point = wavePoints[i];
+                    ctx.lineTo(point.x, point.y);
+                }
+
                 ctx.closePath();
 
-                const ringColor =
-                    entity === 1
-                        ? `rgba(102, 126, 234, ${ringOpacity})`
-                        : `rgba(240, 147, 251, ${ringOpacity})`;
-                ctx.strokeStyle = ringColor;
-                ctx.lineWidth = 1;
+                // Create gradient fill for more depth
+                const fillGradient = ctx.createLinearGradient(
+                    0,
+                    centerY - radius,
+                    0,
+                    centerY + radius
+                );
+                fillGradient.addColorStop(0, "rgba(255, 255, 255, 0)");
+                fillGradient.addColorStop(0.3, entityColor + "40"); // 25% opacity
+                fillGradient.addColorStop(1, entityColor);
+
+                ctx.fillStyle = fillGradient;
+                ctx.fill();
+            }
+
+            // Draw wave line with glow effect
+            if (wavePoints.length > 1) {
+                // Glow effect (wider, semi-transparent)
+                ctx.beginPath();
+                ctx.moveTo(wavePoints[0].x, wavePoints[0].y);
+                for (let i = 1; i < wavePoints.length; i++) {
+                    const point = wavePoints[i];
+                    const prevPoint = wavePoints[i - 1];
+                    const cpx = (prevPoint.x + point.x) / 2;
+                    const cpy = (prevPoint.y + point.y) / 2;
+                    ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, cpx, cpy);
+                }
+                ctx.strokeStyle = entityColor;
+                ctx.lineWidth = 4 + audioIntensity * 2; // Reduced glow thickness
+                ctx.globalAlpha = 0.3 * newOpacity;
+                ctx.stroke();
+
+                // Main wave line (sharp and defined)
+                ctx.beginPath();
+                ctx.moveTo(wavePoints[0].x, wavePoints[0].y);
+                for (let i = 1; i < wavePoints.length; i++) {
+                    const point = wavePoints[i];
+                    const prevPoint = wavePoints[i - 1];
+                    const cpx = (prevPoint.x + point.x) / 2;
+                    const cpy = (prevPoint.y + point.y) / 2;
+                    ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, cpx, cpy);
+                }
+                ctx.strokeStyle = entityColor;
+                ctx.lineWidth = 1.5 + audioIntensity * 1; // Reduced main line thickness
+                ctx.globalAlpha = newOpacity;
                 ctx.stroke();
             }
 
-            // Layer 4: Particle effects based on high frequencies
-            const highFreqStart = Math.floor(bufferLength * 0.7);
-            for (let i = highFreqStart; i < bufferLength; i += 3) {
-                const amplitude = dataArray[i] / 255;
-                if (amplitude > 0.3) {
-                    // Only show particles for significant high frequencies
-                    const angle = Math.random() * Math.PI * 2;
-                    // Keep particles within bounds
-                    const minDistance = baseRadius * 0.8;
-                    const maxDistance = maxRadius * 0.95;
-                    const distance =
-                        minDistance +
-                        Math.random() * (maxDistance - minDistance);
-
-                    const x = centerX + Math.cos(angle) * distance;
-                    const y = centerY + Math.sin(angle) * distance;
-                    const size = Math.min(
-                        amplitude * 4 + Math.sin(time * 5 + i) * 2,
-                        6
-                    ); // Limit particle size
-
-                    ctx.beginPath();
-                    ctx.arc(x, y, size, 0, Math.PI * 2);
-                    const particleColor =
-                        entity === 1
-                            ? `rgba(138, 103, 255, ${amplitude})`
-                            : `rgba(255, 102, 196, ${amplitude})`;
-                    ctx.fillStyle = particleColor;
-                    ctx.fill();
-                }
-            }
-
-            // Layer 5: Pulsing center core
-            const overallVolume =
-                dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
-            const maxCoreRadius = baseRadius * 0.25; // Limit core size
-            const coreRadius = Math.min(
-                8 + (overallVolume / 255) * 15 + Math.sin(time * 4) * 4,
-                maxCoreRadius
-            );
-
-            // Core glow effect
-            const coreGradient = ctx.createRadialGradient(
-                centerX,
-                centerY,
-                0,
-                centerX,
-                centerY,
-                Math.min(coreRadius * 2.5, baseRadius * 0.4) // Ensure glow doesn't exceed bounds
-            );
-
-            if (entity === 1) {
-                coreGradient.addColorStop(0, "rgba(138, 103, 255, 1)");
-                coreGradient.addColorStop(0.4, "rgba(102, 126, 234, 0.8)");
-                coreGradient.addColorStop(1, "rgba(102, 126, 234, 0)");
-            } else {
-                coreGradient.addColorStop(0, "rgba(255, 102, 196, 1)");
-                coreGradient.addColorStop(0.4, "rgba(240, 147, 251, 0.8)");
-                coreGradient.addColorStop(1, "rgba(240, 147, 251, 0)");
-            }
-
-            ctx.beginPath();
-            ctx.arc(
-                centerX,
-                centerY,
-                Math.min(coreRadius * 2.5, baseRadius * 0.4),
-                0,
-                Math.PI * 2
-            );
-            ctx.fillStyle = coreGradient;
-            ctx.fill();
-
-            // Bright core center
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, coreRadius, 0, Math.PI * 2);
-            ctx.fillStyle = entity === 1 ? "#8a67ff" : "#ff66c4";
-            ctx.fill();
+            ctx.restore(); // Remove clipping mask
         };
 
         draw();
     }
 
     stopWaveformAnimation(entity) {
-        if (this.waveformAnimationId) {
-            cancelAnimationFrame(this.waveformAnimationId);
-            this.waveformAnimationId = null;
-        }
+        // Start fade out instead of immediate stop
+        const fadeOut = () => {
+            const currentOpacity =
+                entity === 1 ? this.waveformOpacity1 : this.waveformOpacity2;
+            const newOpacity = Math.max(currentOpacity - this.fadeSpeed * 2, 0); // Faster fade out
 
-        const container =
-            entity === 1 ? this.waveform1Container : this.waveform2Container;
-        const ctx = entity === 1 ? this.waveformCtx1 : this.waveformCtx2;
-        const canvas =
-            entity === 1 ? this.waveformCanvas1 : this.waveformCanvas2;
+            if (entity === 1) {
+                this.waveformOpacity1 = newOpacity;
+            } else {
+                this.waveformOpacity2 = newOpacity;
+            }
 
-        // Remove active class
-        container.classList.remove("active");
+            // Continue fading until fully transparent
+            if (newOpacity > 0) {
+                requestAnimationFrame(fadeOut);
+            } else {
+                // Only stop animation and clear when fully faded
+                if (this.waveformAnimationId) {
+                    cancelAnimationFrame(this.waveformAnimationId);
+                    this.waveformAnimationId = null;
+                }
 
-        // Clear canvas
-        if (ctx && canvas) {
-            ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-        }
+                const container =
+                    entity === 1
+                        ? this.waveform1Container
+                        : this.waveform2Container;
+                const ctx =
+                    entity === 1 ? this.waveformCtx1 : this.waveformCtx2;
+                const canvas =
+                    entity === 1 ? this.waveformCanvas1 : this.waveformCanvas2;
+
+                // Remove active class
+                container.classList.remove("active");
+
+                // Clear canvas
+                if (ctx && canvas) {
+                    ctx.clearRect(
+                        0,
+                        0,
+                        canvas.offsetWidth,
+                        canvas.offsetHeight
+                    );
+                }
+            }
+        };
+
+        fadeOut();
     }
 
     toggleSettings(entity) {

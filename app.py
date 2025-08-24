@@ -37,7 +37,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8000",
         "http://127.0.0.1:8000",  # Local development
-        "https://babel-a9is.onrender.com",  # Production deployment
+        "https://babel-a9is.onrender.com",
+        "https://banterfish.com",  # Production deployment
+        "https://www.banterfish.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -98,6 +100,12 @@ async def get_css():
 async def get_js():
     """Serve the JavaScript file"""
     return FileResponse("script.js", media_type="application/javascript")
+
+
+@app.get("/logo.svg")
+async def get_logo():
+    """Serve the logo SVG file"""
+    return FileResponse("static/logo.svg", media_type="image/svg+xml")
 
 
 async def cleanup_conversation_state(conversation_id: str):
